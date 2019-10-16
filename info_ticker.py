@@ -1,4 +1,5 @@
-#!/usr/bin/python5
+#!/usr/bin/python3
+import os
 import sys
 import time
 import logging
@@ -24,6 +25,8 @@ def _init_loggers():
     '''
     logger_names = [['IINFO', False], ['HWI', False],
                     ['GAINFO', True], ['CONSOLE', False]]
+    if not os.path.isdir('./Logs'):
+        os.mkdir('./Logs')
     for logger_data in logger_names:
         to_console = False
         if logger_data[0] == 'CONSOLE':

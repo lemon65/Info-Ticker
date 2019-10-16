@@ -73,7 +73,7 @@ def set_source_index(target_index):
     # If you are over the max source start loop back.
     if target_index >= int(config_data['BASIC']['max_source_index']):
         target_index = 0
-    print('Setting source_index = %s' % target_index)
+    logger.info('Setting source_index = %s' % target_index)
     logger.info('Setting source_index = %s' % target_index)
     config_data['BASIC']['source_index'] = str(target_index)
 
@@ -93,7 +93,7 @@ def get_request(target_url, params=None, headers=None, auth=None, timeout=30, re
                 - if there is a non-200 response it will error and return a None
     '''
     response = requests.get(target_url, params=params, headers=headers, auth=auth, timeout=timeout)
-    print(response.url)
+    logger.info(response.url)
     if response.status_code == 200:
         if response_type == 'JSON':
             return response.json()
@@ -116,7 +116,7 @@ def gather_top_reddit():
     sub_reddits = config_data['REDDIT']['target_subs']
     for sub in sub_reddits:
         target_sub_url = base_sub_reddit_link % sub
-        print(target_sub_url)
+        logger.info('Getting Data on TargetSub: %s' % target_sub_url)
         feed = feedparser.parse(target_sub_url)
         if feed:
             feed_entries = feed.get('entries')
