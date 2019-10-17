@@ -3,7 +3,7 @@ Modified Python I2C library for Raspberry Pi
 By:DenisFromHR (Denis Pleic) -- 10/02/2015, ver 0.1
 Updated: Lemon65 -- 10/16/2019
 """
-import smbus
+import smbus, logging
 from time import *
 
 logger = logging.getLogger('RPLCD')
