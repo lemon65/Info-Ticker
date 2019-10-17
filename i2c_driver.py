@@ -204,7 +204,7 @@ class RPLCD:
          pos_new = 0x14 + pos
       if line == 4:
          pos_new = 0x54 + pos
-
-    self.lcd_write(0x80 + pos_new)
-    for char in string:
-      self.lcd_write(ord(char), Rs)
+         
+      self.lcd_write(0x80 + pos_new)
+      for char in string:
+         self.lcd_write(ord(char), Rs)
