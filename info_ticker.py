@@ -76,7 +76,7 @@ def main():
     time.sleep(5)
 
     for i in range(20):
-        mylcd.lcd_display_string_pos('', 2, i-1)  # Clears the last cursor location
+        mylcd.lcd_line_clear(2)
         mylcd.lcd_display_string_pos('><>', 2, i) # Writes data to the new location...
         time.sleep(0.2)
 

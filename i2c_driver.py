@@ -153,6 +153,17 @@ class RPLCD:
       self.lcd_write(LCD_CLEARDISPLAY)
       self.lcd_write(LCD_RETURNHOME)
 
+   def lcd_line_clear(self, line):
+      """ Steps all the elements in the Range(LCD_MIN_CHAR & LCD_MAX_CHAR)
+      Arguments:
+          line {[int]} -- This is the line that you are writing to Line Range: [1,2,3,4]
+      """
+      if line not in range(LCD_MIN_LINE, LCD_MAX_LINE):
+         logger.error("The Input line: %s, is out of Range --> [%s - %s]" % (line, LCD_MIN_LINE, LCD_MAX_LINE))
+         return
+      for cursor_step in range(LCD_MAX_CHAR):
+         self.lcd_display_string_pos('', line, cursor_step) # Clears a whole targeted line
+
    def backlight(self, state):
       """ Function to set the backlight on/off
       Arguments:
