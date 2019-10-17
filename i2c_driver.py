@@ -183,13 +183,13 @@ class RPLCD:
           line {[int]} -- This is the line that you are writing to Line Range: [1,2,3,4]
       """
       if line == 1:
-         self.lcd_write(0x80)
+         self.lcd_write(0x80)  # 0x80 == 128
       if line == 2:
-         self.lcd_write(0xC0)
+         self.lcd_write(0xC0)  # 0x80 == 128
       if line == 3:
-         self.lcd_write(0x94)
+         self.lcd_write(0x94)  # 0x94 == 148
       if line == 4:
-         self.lcd_write(0xD4)
+         self.lcd_write(0xD4)  # 0xD4 == 212
       for char in string_data:
          self.lcd_write(ord(char), Rs)
    
@@ -207,14 +207,22 @@ class RPLCD:
       if position not in range(LCD_MIN_CHAR, LCD_MAX_CHAR):
          logger.error("The position: %s, is out of Range --> [%s - %s]" % (line, LCD_MIN_CHAR, LCD_MAX_CHAR))
          return
-      if line == 1:
+      if line == 1: # 0x80 == 128
          position_new = 0x80 + position
-      if line == 2:
+         if position_new >= 0xC0:
+            position_new = 0x80
+      if line == 2: # 0x80 == 128
          position_new = 0xC0 + position
-      if line == 3:
+         if position_new >= 0x94:
+            position_new = 0xC0
+      if line == 3: # 0x94 == 148
          position_new = 0x94 + position
-      if line == 4:
+         if position_new >= 0xD4:
+            position_new = 0x94
+      if line == 4: # 0xD4 == 212
          position_new = 0xD4 + position
+         if position_new >= 0xE7:
+            position_new = 0xD4
          
       self.lcd_write(position_new)
       for char in string_data:
