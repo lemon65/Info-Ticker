@@ -148,6 +148,21 @@ class RPLCD:
       self.lcd_write_four_bits(mode | (cmd & 0xF0))
       self.lcd_write_four_bits(mode | ((cmd << 4) & 0xF0))
 
+   def lcd_clear(self):
+      """ Clears the LCD and commands the cursor home (0, 0), uses lcd_write() """
+      self.lcd_write(LCD_CLEARDISPLAY)
+      self.lcd_write(LCD_RETURNHOME)
+
+   def backlight(self, state):
+      """ Function to set the backlight on/off
+      Arguments:
+          state {[int]} -- State to turn on and off the backlight - 1=ON, 0=OFF
+      """
+      if state == 1:
+         self.lcd_device.write_cmd(LCD_BACKLIGHT)
+      elif state == 0:
+         self.lcd_device.write_cmd(LCD_NOBACKLIGHT)
+        
    def lcd_display_string(self, string_data, line):
       """This function writes data to the LCD, taking a string under 20 characters and
       the line you want to write to.
@@ -166,28 +181,14 @@ class RPLCD:
          self.lcd_write(0xD4)
       for char in string_data:
          self.lcd_write(ord(char), Rs)
-
-   def lcd_clear(self):
-      """ Clears the LCD and commands the cursor home (0, 0), uses lcd_write() """
-      self.lcd_write(LCD_CLEARDISPLAY)
-      self.lcd_write(LCD_RETURNHOME)
-
-   def backlight(self, state):
-      """ Function to set the backlight on/off
-      Arguments:
-          state {[int]} -- State to turn on and off the backlight - 1=ON, 0=OFF
-      """
-      if state == 1:
-         self.lcd_device.write_cmd(LCD_BACKLIGHT)
-      elif state == 0:
-         self.lcd_device.write_cmd(LCD_NOBACKLIGHT)
-        
+   
    def lcd_display_string_pos(self, string_data, line, position):
       """ Define precise positioning when displaying text on the LCD
       Arguments:
           string_data {[str]} -- string data to write to the LCD (under 20 CHARS)
           line {[int]} -- target line you want to write your data to -- [1, 2, 3, 4]
-          position {[int]} -- position on that line you want to start writing [0, 20]
+          position {[int]} -- position on that line you want to start writing [0, 19]
+                                 Note -- this position value starts at 0
       """
       if line not in range(LCD_MIN_LINE, LCD_MAX_LINE):
          logger.error("The Input line: %s, is out of Range --> [%s - %s]" % (line, LCD_MIN_LINE, LCD_MAX_LINE))

@@ -72,20 +72,16 @@ def main():
             time.sleep(1)
     
     mylcd = i2c_driver.RPLCD()
-    mylcd.lcd_display_string('Test Line 1', 1)
-    mylcd.lcd_display_string('Test Line 2', 2)
-    mylcd.lcd_display_string('Test Line 3', 3)
-    mylcd.lcd_display_string('Test Line 4', 4)
+    mylcd.lcd_display_string_pos('## Scrolling Text ##', 1, 5)
+    time.sleep(5)
 
-    time.sleep(5)
+    for i in range(20):
+        mylcd.lcd_display_string_pos('', 2, i-1)  # Clears the last cursor location
+        mylcd.lcd_display_string_pos('><>', 2, i) # Writes data to the new location...
+        time.sleep(0.2)
+
     mylcd.lcd_clear()
-    mylcd.lcd_display_string('Good Bye', 1)
-    time.sleep(5)
-    mylcd.lcd_clear()
-    mylcd.lcd_display_string('Night', 1)
-    time.sleep(5)
-    mylcd.lcd_clear()
-    
+
 if __name__ == "__main__":
     runtime_flag = True
     _init_loggers()
