@@ -205,5 +205,5 @@ class RPLCD:
          position_new = 0x54 + position
          
       self.lcd_write(0x80 + position_new)
-      for char in string:
+      for char in string_data:
          self.lcd_write(ord(char), Rs)
