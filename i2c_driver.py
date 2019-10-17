@@ -14,7 +14,7 @@ LCD_MAX_LINE = 4
 
 # LCD CHAR Range
 LCD_MIN_CHAR = 0
-LCD_MAX_LINE = 19
+LCD_MAX_CHAR = 19
 
 # LCD Address
 ADDRESS = 0x27
@@ -189,12 +189,11 @@ class RPLCD:
           line {[int]} -- target line you want to write your data to -- [1, 2, 3, 4]
           position {[int]} -- position on that line you want to start writing [0, 20]
       """
-     
       if line not in range(LCD_MIN_LINE, LCD_MAX_LINE):
          logger.error("The Input line: %s, is out of Range --> [%s - %s]" % (line, LCD_MIN_LINE, LCD_MAX_LINE))
          return
-      if position not in range(LCD_MIN_CHAR, LCD_MIN_CHAR):
-         logger.error("The position: %s, is out of Range --> [%s - %s]" % (line, LCD_MIN_CHAR, LCD_MIN_CHAR))
+      if position not in range(LCD_MIN_CHAR, LCD_MAX_CHAR):
+         logger.error("The position: %s, is out of Range --> [%s - %s]" % (line, LCD_MIN_CHAR, LCD_MAX_CHAR))
          return
       if line == 1:
          pos_new = pos
