@@ -1,8 +1,6 @@
 #!/usr/bin/python3
-import os
-import sys
-import time
-import logging
+import os, sys, time, logging
+import RPi_I2C_driver as rp_i2c
 import gather_info as gi
 import create_logger as cl
 import hw_interface as hwi
@@ -51,7 +49,7 @@ def index_source():
 
 
 def main():
-    to_call = 1
+    to_call = 0
     logger.info('#'*30 + ' Starting the Info Ticker ' + "#"*30)
 
     if to_call == 1:
@@ -62,6 +60,7 @@ def main():
         today_in_history = gi.gather_today_in_history()
         for i in today_in_history:
             print(i)
+    to_call = 0
     if to_call == 3:
         reddit_posts = gi.gather_top_reddit()
         for i in reddit_posts:
@@ -71,7 +70,20 @@ def main():
             current_time = gi.gather_current_time()
             print(current_time)
             time.sleep(1)
+    
+    mylcd = rp_i2c.lcd()
+    mylcd.lcd_display_string('Test Line 1', 1)
+    mylcd.lcd_display_string('Test Line 2', 2)
+    mylcd.lcd_display_string('Test Line 3', 3)
+    mylcd.lcd_display_string('Test Line 4', 4)
 
+    time.sleep(10)
+
+    mylcd.lcd_clear()
+
+    mylcd.lcd_display_string('Good Bye', 1)
+
+    time.sleep(10)
 
 if __name__ == "__main__":
     runtime_flag = True
