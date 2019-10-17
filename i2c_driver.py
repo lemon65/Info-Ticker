@@ -162,7 +162,7 @@ class RPLCD:
          logger.error("The Input line: %s, is out of Range --> [%s - %s]" % (line, LCD_MIN_LINE, LCD_MAX_LINE))
          return
       for cursor_step in range(LCD_MAX_CHAR):
-         self.lcd_display_string_pos('', line, cursor_step) # Clears a whole targeted line
+         self.lcd_display_string_pos(' ', line, cursor_step) # Clears a whole targeted line
 
    def backlight(self, state):
       """ Function to set the backlight on/off
