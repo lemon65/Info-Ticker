@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 import os, sys, time, logging
-import RPi_I2C_driver as rp_i2c
+import i2c_driver
 import gather_info as gi
 import create_logger as cl
 import hw_interface as hwi
@@ -17,12 +17,13 @@ def _init_loggers():
         logger_object = logging.getLogger('LOGGER_NAME')
         logger_object.info('Data to log...')
 
-    Logger Names = 'IINFO', 'HWI', 'GAINFO', 'CONSOLE'
+    Logger Names = 'IINFO', 'HWI', 'GAINFO', 'CONSOLE', 'RPLCD'
 
     RETURNS --> No Return value
     '''
     logger_names = [['IINFO', False], ['HWI', False],
-                    ['GAINFO', True], ['CONSOLE', False]]
+                    ['GAINFO', True], ['CONSOLE', False],
+                    ['RPLCD', True]]
     if not os.path.isdir('./Logs'):
         os.mkdir('./Logs')
     for logger_data in logger_names:
@@ -33,7 +34,6 @@ def _init_loggers():
         cl.setup_logging(logger_data[0],
                          create_file=logger_data[1],
                          stream_to_console=to_console)
-
 
 def _abort():
     ''' Sets the runtime_flag == False, stopping the Main Loop '''
@@ -71,20 +71,21 @@ def main():
             print(current_time)
             time.sleep(1)
     
-    mylcd = rp_i2c.lcd()
+    mylcd = i2c_driver.RPLCD()
     mylcd.lcd_display_string('Test Line 1', 1)
     mylcd.lcd_display_string('Test Line 2', 2)
     mylcd.lcd_display_string('Test Line 3', 3)
     mylcd.lcd_display_string('Test Line 4', 4)
 
-    time.sleep(10)
-
+    time.sleep(5)
     mylcd.lcd_clear()
-
     mylcd.lcd_display_string('Good Bye', 1)
-
-    time.sleep(10)
-
+    time.sleep(5)
+    mylcd.lcd_clear()
+    mylcd.lcd_display_string('Night', 1)
+    time.sleep(5)
+    mylcd.lcd_clear()
+    
 if __name__ == "__main__":
     runtime_flag = True
     _init_loggers()
