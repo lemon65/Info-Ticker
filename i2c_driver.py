@@ -196,14 +196,14 @@ class RPLCD:
          logger.error("The position: %s, is out of Range --> [%s - %s]" % (line, LCD_MIN_CHAR, LCD_MAX_CHAR))
          return
       if line == 1:
-         pos_new = pos
+         position_new = position
       if line == 2:
-         pos_new = 0x40 + pos
+         position_new = 0x40 + position
       if line == 3:
-         pos_new = 0x14 + pos
+         position_new = 0x14 + position
       if line == 4:
-         pos_new = 0x54 + pos
+         position_new = 0x54 + position
          
-      self.lcd_write(0x80 + pos_new)
+      self.lcd_write(0x80 + position_new)
       for char in string:
          self.lcd_write(ord(char), Rs)
