@@ -206,7 +206,7 @@ class RPLCD:
          logger.error("The Input line: %s, is out of Range --> [%s - %s]" % (line, LCD_MIN_LINE, LCD_MAX_LINE))
          return
       for i in range (0, len(padded_string)):
-         lcd_text = padded_string[i:(i+16)]
+         lcd_text = padded_string[i:(i + LCD_MAX_CHAR)]
          self.lcd_display_string(lcd_text, line)
          sleep(0.5)
          self.lcd_display_string(padding, line)
