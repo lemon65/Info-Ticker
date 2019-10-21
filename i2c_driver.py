@@ -182,25 +182,13 @@ class RPLCD:
         
    def lcd_display_string(self, string_data, line):
       """This function writes data to the LCD, taking a string under 20 characters and
-      the line you want to write to.
+      the line you want to write to, uses the lcd_display_string_pos() with no position value.
       
       Arguments:
           string_data {[str]} -- string data to write to the LCD (under 20 CHARS)
           line {[int]} -- This is the line that you are writing to Line Range: [1,2,3,4]
       """
-      if line not in range(LCD_MIN_LINE, LCD_MAX_LINE):
-         logger.error("The Input line: %s, is out of Range --> [%s - %s]" % (line, LCD_MIN_LINE, LCD_MAX_LINE))
-         return
-      if line == 1:
-         self.lcd_write(0x80)  # 0x80 == 128
-      if line == 2:
-         self.lcd_write(0xC0)  # 0xC0 == 192
-      if line == 3:
-         self.lcd_write(0x94)  # 0x94 == 148
-      if line == 4:
-         self.lcd_write(0xD4)  # 0xD4 == 212
-      for char in string_data:
-         self.lcd_write(ord(char), Rs)
+      self.lcd_display_string_pos(string_data, line)  # Calls lcd_display_string_pos with no position value
    
    def scroll_text(self, string_data, line, loop_times=2):
       """Function to call lcd_display_string(), so long as the recall flag isn't set.
@@ -224,12 +212,12 @@ class RPLCD:
             sleep(0.4)
             self.lcd_display_string(padding, line)
 
-   def lcd_display_string_pos(self, string_data, line, position):
+   def lcd_display_string_pos(self, string_data, line, position=0):
       """ Define precise positioning when displaying text on the LCD
       Arguments:
           string_data {[str]} -- string data to write to the LCD (under 20 CHARS)
           line {[int]} -- target line you want to write your data to -- [1, 2, 3, 4]
-          position {[int]} -- position on that line you want to start writing [0, 19]
+          position {[int]} - OPTINAL - position on that line you want to start writing [0, 19]
                                  Note -- this position value starts at 0
       """
       if line not in range(LCD_MIN_LINE, LCD_MAX_LINE):
