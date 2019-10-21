@@ -207,9 +207,9 @@ class RPLCD:
          return
       for i in range (0, len(padded_string)):
          lcd_text = padded_string[i:(i+16)]
-         mylcd.lcd_display_string(lcd_text, line)
+         self.lcd_display_string(lcd_text, line)
          sleep(0.5)
-         mylcd.lcd_display_string(str_pad, line)
+         self.lcd_display_string(str_pad, line)
 
    def lcd_display_string_pos(self, string_data, line, position):
       """ Define precise positioning when displaying text on the LCD
