@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 import os, sys, time, logging
-import i2c_driver
 import gather_info as gi
 import create_logger as cl
 import hw_interface as hwi
@@ -8,7 +7,6 @@ import hw_interface as hwi
 
 logger = logging.getLogger('IINFO')
 global runtime_flag
-
 
 def _init_loggers():
     ''' This creates all the logger objects for the evironment, and allows the
@@ -40,16 +38,19 @@ def _abort():
     global runtime_flag
     runtime_flag = False
 
-
 def index_source():
     ''' This will index the config_data -- source_index,
     so we can pull different media
     '''
-    gi.set_source_index(gi.get_source_index() + 1)
-
+    target_source = gi.get_source_index()
+    logger.info('Index Source: %s >> %s' % (target_source, target_source + 1))
+    print('Index Source: %s >> %s' % (target_source, target_source + 1))
+    gi.set_source_index(target_source + 1)
 
 def main():
-    to_call = 0
+    hardware_interface = hwi.HardWareInterface()
+    hardware_interface.start_button_poller()
+    to_call = 3
     logger.info('#'*30 + ' Starting the Info Ticker ' + "#"*30)
 
     if to_call == 1:
@@ -58,32 +59,18 @@ def main():
             print(i)
     if to_call == 2:
         today_in_history = gi.gather_today_in_history()
-        for i in today_in_history:
-            print(i)
-    to_call = 0
     if to_call == 3:
         reddit_posts = gi.gather_top_reddit()
-        for i in reddit_posts:
-            print(i)
     if to_call == 4:
         while True:
             current_time = gi.gather_current_time()
             print(current_time)
             time.sleep(1)
+    for reddit_data in reddit_posts:
+        hardware_interface.write_to_lcd_screen(reddit_data)
     
-    mylcd = i2c_driver.RPLCD()
-    print('## Test ## -- line 1, 3 in...')    
-    mylcd.lcd_display_string_pos('## Test ##', 1, 3)
-    time.sleep(3)
-    mylcd.lcd_line_clear(1)
-    print('Scroll -- "This is a string that needs to scroll"')
-    mylcd.scroll_text("This is a string that needs to scroll", 1)
-    time.sleep(2)
-    mylcd.lcd_clear()
-    print('-_- -- line 3, 5 in...')
-    mylcd.lcd_display_string_pos('-_-', 3, 5)
-    time.sleep(2)
-    mylcd.lcd_clear()
+    hardware_interface.stop_button_poller()
+    
 
 if __name__ == "__main__":
     runtime_flag = True

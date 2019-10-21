@@ -8,6 +8,9 @@ from time import *
 
 logger = logging.getLogger('RPLCD')
 
+# Bool used to stop the scrolling function
+STOP_SCROLL = False
+
 # LCD line Range
 LCD_MIN_LINE = 1
 LCD_MAX_LINE = 4
@@ -150,6 +153,7 @@ class RPLCD:
 
    def lcd_clear(self):
       """ Clears the LCD and commands the cursor home (0, 0), uses lcd_write() """
+      logger.info('Clearing the whole LCD...')
       self.lcd_write(LCD_CLEARDISPLAY)
       self.lcd_write(LCD_RETURNHOME)
 
@@ -161,6 +165,7 @@ class RPLCD:
       if line not in range(LCD_MIN_LINE, LCD_MAX_LINE):
          logger.error("The Input line: %s, is out of Range --> [%s - %s]" % (line, LCD_MIN_LINE, LCD_MAX_LINE))
          return
+      logger.info('Clearing Line: %s' % line)
       for cursor_step in range(LCD_MAX_CHAR):
          self.lcd_display_string_pos(' ', line, cursor_step) # Clears a whole targeted line
 
@@ -169,6 +174,7 @@ class RPLCD:
       Arguments:
           state {[int]} -- State to turn on and off the backlight - 1=ON, 0=OFF
       """
+      logger.info('LCD BackLight State: %s' % state)
       if state == 1:
          self.lcd_device.write_cmd(LCD_BACKLIGHT)
       elif state == 0:
@@ -182,10 +188,13 @@ class RPLCD:
           string_data {[str]} -- string data to write to the LCD (under 20 CHARS)
           line {[int]} -- This is the line that you are writing to Line Range: [1,2,3,4]
       """
+      if line not in range(LCD_MIN_LINE, LCD_MAX_LINE):
+         logger.error("The Input line: %s, is out of Range --> [%s - %s]" % (line, LCD_MIN_LINE, LCD_MAX_LINE))
+         return
       if line == 1:
          self.lcd_write(0x80)  # 0x80 == 128
       if line == 2:
-         self.lcd_write(0xC0)  # 0x80 == 128
+         self.lcd_write(0xC0)  # 0xC0 == 192
       if line == 3:
          self.lcd_write(0x94)  # 0x94 == 148
       if line == 4:
@@ -193,23 +202,27 @@ class RPLCD:
       for char in string_data:
          self.lcd_write(ord(char), Rs)
    
-   def scroll_text(self, string_data, line):
+   def scroll_text(self, string_data, line, loop_times=2):
       """Function to call lcd_display_string(), so long as the recall flag isn't set.
       
       Arguments:
           string_data {[str]} -- String data that is to be scrolled accross the LCD
-          line {[int]} -- line number to be used [1-4]
+          line {[int]} -- line number to be used, Line Range: [1,2,3,4]
+          loop_times {[int]} -- Times that you would like to loop the string_data   
       """
-      padding = "-" * LCD_MAX_CHAR
+      padding = " " * LCD_MAX_CHAR
       padded_string = string_data + padding
       if line not in range(LCD_MIN_LINE, LCD_MAX_LINE):
          logger.error("The Input line: %s, is out of Range --> [%s - %s]" % (line, LCD_MIN_LINE, LCD_MAX_LINE))
          return
-      for i in range (0, len(padded_string)):
-         lcd_text = padded_string[i:(i + LCD_MAX_CHAR)]
-         self.lcd_display_string(lcd_text, line)
-         sleep(0.5)
-         self.lcd_display_string(padding, line)
+      for _ in range(loop_times):
+         for index in range (0, len(padded_string)):
+            if STOP_SCROLL:  # if the STOP_SCROLL == True, return from the function..
+               return
+            lcd_text = padded_string[index:(index + LCD_MAX_CHAR)]
+            self.lcd_display_string(lcd_text, line)
+            sleep(0.4)
+            self.lcd_display_string(padding, line)
 
    def lcd_display_string_pos(self, string_data, line, position):
       """ Define precise positioning when displaying text on the LCD

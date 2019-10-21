@@ -104,7 +104,6 @@ def get_request(target_url, params=None, headers=None, auth=None, timeout=30, re
         logger.error('Response: %s' % response.text)
         return None
 
-
 def gather_top_reddit():
     '''
     Gets data from target subreddits and returns the titles of said posts.
