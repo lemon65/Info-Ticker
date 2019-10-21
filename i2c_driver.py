@@ -3,8 +3,7 @@ Modified Python I2C library for Raspberry Pi
 By:DenisFromHR (Denis Pleic) -- 10/02/2015, ver 0.1
 Updated: Lemon65 -- 10/16/2019
 """
-import smbus, logging
-from time import *
+import smbus, logging, time
 
 logger = logging.getLogger('RPLCD')
 
@@ -209,7 +208,7 @@ class RPLCD:
                return
             lcd_text = padded_string[index:(index + LCD_MAX_CHAR)]
             self.lcd_display_string(lcd_text, line)
-            sleep(0.4)
+            time.sleep(0.1)
             self.lcd_display_string(padding, line)
 
    def lcd_display_string_pos(self, string_data, line, position=0):

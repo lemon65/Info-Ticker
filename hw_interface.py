@@ -24,12 +24,11 @@ class HardWareInterface():
         source = info_to_write[1]
         string_to_write = info_to_write[2]
         self.mylcd.lcd_clear()
-        self.mylcd.lcd_display_string_pos('## Info Ticker ##', 1, 2)
         for index, data_val in enumerate([service, source, string_to_write]):
             if len(data_val) <= i2c_driver.LCD_MAX_CHAR:
-                self.mylcd.lcd_display_string(data_val, index + 2)
+                self.mylcd.lcd_display_string(data_val, index + 1)
             else:
-                self.mylcd.scroll_text(data_val, index + 2)
+                self.mylcd.scroll_text(data_val, index + 1)
 
     def stop_lcd_scroll(self):
         """ Function to stop the scrolling function in the i2c_driver, and force a return... """
@@ -67,6 +66,7 @@ class HardWareInterface():
             source_button_state = GPIO.input(source_pin)
             if source_button_state:
                 intic.index_source()
+                self.stop_lcd_scroll()
                 time.sleep(0.2)
 
     def scan_and_connect_wifi(self):
