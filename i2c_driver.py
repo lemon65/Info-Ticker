@@ -14,7 +14,7 @@ LCD_MAX_LINE = 4
 
 # LCD CHAR Range
 LCD_MIN_CHAR = 0
-LCD_MAX_CHAR = 19
+LCD_MAX_CHAR = 21
 
 # LCD Address
 ADDRESS = 0x27
@@ -200,7 +200,7 @@ class RPLCD:
           string_data {[str]} -- String data that is to be scrolled accross the LCD
           line {[int]} -- line number to be used [1-4]
       """
-      padding = " " * LCD_MAX_CHAR
+      padding = "-" * LCD_MAX_CHAR
       padded_string = string_data + padding
       if line not in range(LCD_MIN_LINE, LCD_MAX_LINE):
          logger.error("The Input line: %s, is out of Range --> [%s - %s]" % (line, LCD_MIN_LINE, LCD_MAX_LINE))
