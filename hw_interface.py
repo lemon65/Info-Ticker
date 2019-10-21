@@ -24,7 +24,7 @@ class HardWareInterface():
         service = info_to_write[0] 
         source = info_to_write[1]
         string_to_write = info_to_write[2]
-        self.mylcd.lcd_display_string_pos('## Info Ticker ##', 1)
+        self.mylcd.lcd_display_string_pos('## Info Ticker ##', 1, 3)
         for index, data_val in enumerate([service, source, string_to_write]):
             if len(data_val) <= i2c_driver.LCD_MAX_CHAR:
                 self.mylcd.lcd_display_string(data_val, index + 2)
@@ -53,7 +53,6 @@ class HardWareInterface():
         '''
         function to stop a the threaded process that is polling for button pushes
         '''
-        global poll_source_button
         logger.info('Stopping the Source_Button polling Thread...')
         self.poll_source_button = False
 
@@ -64,9 +63,9 @@ class HardWareInterface():
         GPIO.setmode(GPIO.BOARD)
         source_pin = int(gi.config_data['BASIC']['source_pin'])
         GPIO.setup(source_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-        while poll_source_button:
+        while self.poll_source_button:
             source_button_state = GPIO.input(source_pin)
-            if not source_button_state:
+            if source_button_state:
                 intic.index_source()
                 time.sleep(0.2)
 
