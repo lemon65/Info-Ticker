@@ -23,8 +23,11 @@ class HardWareInterface():
         service = info_to_write[0] 
         source = info_to_write[1]
         string_to_write = info_to_write[2]
+        starting_source = gi.get_source_index()
         self.mylcd.lcd_clear()
         for index, data_val in enumerate([service, source, string_to_write]):
+            if starting_source != gi.get_source_index():  # if we have changed soruce, break out
+                return
             if len(data_val) <= i2c_driver.LCD_MAX_CHAR:
                 self.mylcd.lcd_display_string(data_val, index + 1)
             else:
@@ -33,9 +36,9 @@ class HardWareInterface():
     def stop_lcd_scroll(self):
         """ Function to stop the scrolling function in the i2c_driver, and force a return... """
         i2c_driver.STOP_SCROLL = True
-        time.sleep(0.3)
+        time.sleep(0.1)
         i2c_driver.STOP_SCROLL = False
-        
+
     def start_button_poller(self):
         '''
         function to start a threaded process and poll for button pushes,

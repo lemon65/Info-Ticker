@@ -6,6 +6,7 @@ import hw_interface as hwi
 
 
 logger = logging.getLogger('IINFO')
+console = logging.getLogger('CONSOLE')
 global runtime_flag
 
 def _init_loggers():
@@ -50,25 +51,24 @@ def index_source():
 def main():
     hardware_interface = hwi.HardWareInterface()
     hardware_interface.start_button_poller()
-    to_call = 3
     logger.info('#'*30 + ' Starting the Info Ticker ' + "#"*30)
+    #weather_data = gi.gather_weather()
 
-    if to_call == 1:
-        weather_data = gi.gather_weather()
-        for i in weather_data:
-            print(i)
-    if to_call == 2:
-        today_in_history = gi.gather_today_in_history()
-    if to_call == 3:
-        reddit_posts = gi.gather_top_reddit()
-    if to_call == 4:
-        while True:
-            current_time = gi.gather_current_time()
-            print(current_time)
-            time.sleep(1)
-    for reddit_data in reddit_posts:
-        hardware_interface.write_to_lcd_screen(reddit_data)
-    
+    today_in_history = gi.gather_today_in_history()
+    reddit_posts = gi.gather_top_reddit()
+    #current_time = gi.gather_current_time()
+    twitter = [['Twitter-Test-1', 'Twitter-Test-2', 'Twitter-Test-3']]
+    stocks = [['Stocks-Test-1', 'Stocks-Test-2', 'Stocks-Test-3']]
+    weather = [['Weather-Test-1', 'Weather-Test-2', 'Weather-Test-3']]
+    clock = [['clock-Test-1', 'clock-Test-2', 'clock-Test-3']]
+    data_points = [reddit_posts, twitter, stocks, today_in_history, weather, clock]
+    while True:
+        # TODO -- if current time is over repoll_interval in the config.... gather and update the data_points LIST
+        try:
+            current_source = gi.get_source_index()  # (0=Reddit, 1=Twitter, 2=Stocks, 3=TodayInHistory, 4=Weather, 5=Clock)
+            hardware_interface.write_to_lcd_screen(data_points[current_source])
+        except KeyboardInterrupt:
+            console.info('Ending Script.....')
     hardware_interface.stop_button_poller()
     
 
