@@ -193,6 +193,24 @@ class RPLCD:
       for char in string_data:
          self.lcd_write(ord(char), Rs)
    
+   def scroll_text(self, string_data, line):
+      """Function to call lcd_display_string(), so long as the recall flag isn't set.
+      
+      Arguments:
+          string_data {[str]} -- String data that is to be scrolled accross the LCD
+          line {[int]} -- line number to be used [1-4]
+      """
+      padding = " " * LCD_MAX_CHAR
+      padded_string = string_data + padding
+      if line not in range(LCD_MIN_LINE, LCD_MAX_LINE):
+         logger.error("The Input line: %s, is out of Range --> [%s - %s]" % (line, LCD_MIN_LINE, LCD_MAX_LINE))
+         return
+      for i in range (0, len(string_data)):
+         lcd_text = padded_string[((len(string_data)-1)-i):-i]
+         self.lcd_display_string(lcd_text, line)
+         sleep(0.4)
+         self.lcd_display_string(padding[(15+i):i], 1)
+
    def lcd_display_string_pos(self, string_data, line, position):
       """ Define precise positioning when displaying text on the LCD
       Arguments:
@@ -207,23 +225,4 @@ class RPLCD:
       if position not in range(LCD_MIN_CHAR, LCD_MAX_CHAR):
          logger.error("The position: %s, is out of Range --> [%s - %s]" % (line, LCD_MIN_CHAR, LCD_MAX_CHAR))
          return
-      if line == 1: # 0x80 == 128
-         position_new = 0x80 + position
-         if position_new >= 0xC0:
-            position_new = 0x80
-      if line == 2: # 0x80 == 128
-         position_new = 0xC0 + position
-         if position_new >= 0x94:
-            position_new = 0xC0
-      if line == 3: # 0x94 == 148
-         position_new = 0x94 + position
-         if position_new >= 0xD4:
-            position_new = 0x94
-      if line == 4: # 0xD4 == 212
-         position_new = 0xD4 + position
-         if position_new >= 0xE7:
-            position_new = 0xD4
-         
-      self.lcd_write(position_new)
-      for char in string_data:
-         self.lcd_write(ord(char), Rs)
+      self.lcd_write(string_data, line, position)

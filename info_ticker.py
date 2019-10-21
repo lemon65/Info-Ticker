@@ -72,14 +72,14 @@ def main():
             time.sleep(1)
     
     mylcd = i2c_driver.RPLCD()
-    mylcd.lcd_display_string_pos('## Scrolling Text ##', 1, 2)
-    time.sleep(5)
+    mylcd.lcd_display_string_pos('## Test ##', 1, 3)
+    time.sleep(3)
 
-    for i in range(20):
-        mylcd.lcd_line_clear(2)
-        mylcd.lcd_display_string_pos('><>', 2, i) # Writes data to the new location...
-        time.sleep(0.4)
-
+    mylcd.scroll_text("This is a string that needs to scroll", 1)
+    time.sleep(2)
+    mylcd.lcd_clear()
+    mylcd.lcd_display_string_pos('-_-', 3, 5)
+    time.sleep(2)
     mylcd.lcd_clear()
 
 if __name__ == "__main__":
