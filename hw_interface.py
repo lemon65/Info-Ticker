@@ -20,12 +20,12 @@ class HardWareInterface():
             Element[1] -- source = Who is writing this? (Author, User, Etc.)
             Element[2] -- string_to_write = a sting of data to write (title, weather data, Etc.)
         '''
-        self.mylcd.lcd_clear()
         service = info_to_write[0] 
         source = info_to_write[1]
         string_to_write = info_to_write[2]
-        self.mylcd.lcd_display_string_pos('## Info Ticker ##', 1, 3)
+        self.mylcd.lcd_display_string_pos('## Info Ticker ##', 1, 2)
         for index, data_val in enumerate([service, source, string_to_write]):
+            self.mylcd.lcd_line_clear(index + 2)
             if len(data_val) <= i2c_driver.LCD_MAX_CHAR:
                 self.mylcd.lcd_display_string(data_val, index + 2)
             else:

@@ -13,7 +13,7 @@ STOP_SCROLL = False
 
 # LCD line Range
 LCD_MIN_LINE = 1
-LCD_MAX_LINE = 4
+LCD_MAX_LINE = 5
 
 # LCD CHAR Range
 LCD_MIN_CHAR = 0
