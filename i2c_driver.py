@@ -205,11 +205,11 @@ class RPLCD:
       if line not in range(LCD_MIN_LINE, LCD_MAX_LINE):
          logger.error("The Input line: %s, is out of Range --> [%s - %s]" % (line, LCD_MIN_LINE, LCD_MAX_LINE))
          return
-      for i in range (0, len(string_data)):
-         lcd_text = padded_string[((len(string_data)-1)-i):-i]
-         self.lcd_display_string(lcd_text, line)
-         sleep(0.4)
-         self.lcd_display_string(padding[(15+i):i], 1)
+      for i in range (0, len(padded_string)):
+         lcd_text = padded_string[i:(i+16)]
+         mylcd.lcd_display_string(lcd_text, line)
+         sleep(0.5)
+         mylcd.lcd_display_string(str_pad, line)
 
    def lcd_display_string_pos(self, string_data, line, position):
       """ Define precise positioning when displaying text on the LCD
@@ -225,6 +225,14 @@ class RPLCD:
       if position not in range(LCD_MIN_CHAR, LCD_MAX_CHAR):
          logger.error("The position: %s, is out of Range --> [%s - %s]" % (line, LCD_MIN_CHAR, LCD_MAX_CHAR))
          return
-      self.lcd_write(position)
+      if line == 1:
+         new_position = position
+      elif line == 2:
+         new_position = 0x40 + position
+      elif line == 3:
+         new_position = 0x14 + position
+      elif line == 4:
+         new_position = 0x54 + position
+      self.lcd_write(0x80 + new_position)
       for char in string_data:
          self.lcd_write(ord(char), Rs)
