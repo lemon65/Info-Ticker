@@ -86,17 +86,17 @@ class i2c_device:
           cmd {[Hex/Byte]} -- Command call, defined in the globals
       """
       self.bus.write_byte(self.addr, cmd)
-      sleep(0.0001)
+      time.sleep(0.0001)
 
    def write_cmd_arg(self, cmd, data):
       """ Write a command and argument"""
       self.bus.write_byte_data(self.addr, cmd, data)
-      sleep(0.0001)
+      time.sleep(0.0001)
 
    def write_block_data(self, cmd, data):
       """ Write a block of data """
       self.bus.write_block_data(self.addr, cmd, data)
-      sleep(0.0001)
+      time.sleep(0.0001)
 
    def read(self):
       """ Read a single byte from the I2C LCD Bus """
@@ -124,14 +124,14 @@ class RPLCD:
       self.lcd_write(LCD_DISPLAYCONTROL | LCD_DISPLAYON)
       self.lcd_write(LCD_CLEARDISPLAY)
       self.lcd_write(LCD_ENTRYMODESET | LCD_ENTRYLEFT)
-      sleep(0.2)
+      time.sleep(0.2)
 
    def lcd_strobe(self, data):
       """ clocks EN to latch command """
       self.lcd_device.write_cmd(data | En | LCD_BACKLIGHT)
-      sleep(.0005)
+      time.sleep(.0005)
       self.lcd_device.write_cmd(((data & ~En) | LCD_BACKLIGHT))
-      sleep(.0001)
+      time.sleep(.0001)
 
    def lcd_write_four_bits(self, data):
       """ Commands the LCD to Write four bits of data to the LCD """
