@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+<<<<<<< HEAD
 import logging, time, threading
 from typing import NamedTuple
 from RPLCD import CharLCD
@@ -36,6 +37,47 @@ class HWInterface():
             self.pi_lcd.cursor_pos(index, 0)  # move to the right row, and move to the Zero Position
 
 
+=======
+import logging, threading, time
+import i2c_driver
+import gather_info as gi
+import info_ticker as intic
+import RPi.GPIO as GPIO
+
+logger = logging.getLogger('HWI')
+
+class HardWareInterface():
+    def __init__(self):
+        self.poll_source_button = False
+        self.mylcd = i2c_driver.RPLCD()
+
+    def write_to_lcd_screen(self, info_to_write):
+        '''
+        function to write to the LCD screen attached to the Raspberry Pi
+        info_to_write = a nested list of data points
+            Element[0] -- service = Where is it coming from (Reddit, Twitter, News)
+            Element[1] -- source = Who is writing this? (Author, User, Etc.)
+            Element[2] -- string_to_write = a sting of data to write (title, weather data, Etc.)
+        '''
+        service = info_to_write[0] 
+        source = info_to_write[1]
+        string_to_write = info_to_write[2]
+        starting_source = gi.get_source_index()
+        self.mylcd.lcd_clear()
+        for index, data_val in enumerate([service, source, string_to_write]):
+            if starting_source != gi.get_source_index():  # if we have changed soruce, break out
+                return
+            if len(data_val) <= i2c_driver.LCD_MAX_CHAR:
+                self.mylcd.lcd_display_string(data_val, index + 1)
+            else:
+                self.mylcd.scroll_text(data_val, index + 1)
+
+    def stop_lcd_scroll(self):
+        """ Function to stop the scrolling function in the i2c_driver, and force a return... """
+        i2c_driver.STOP_SCROLL = True
+        time.sleep(0.1)
+        i2c_driver.STOP_SCROLL = False
+>>>>>>> 8dcc40738fa0fd8dd6cd593c56c8017db5cd6861
 
     def start_button_poller(self):
         '''
@@ -46,10 +88,17 @@ class HWInterface():
             logger.info('Starting the Source_Button polling Thread...')
             self.poll_source_button = True
             button_polling_thread = threading.Thread(name="button_polling_thread",
+<<<<<<< HEAD
                                                      target=_source_button_poller)
             button_polling_thread.start()
 
     def stop_button_poller():
+=======
+                                                    target=self._source_button_poller)
+            button_polling_thread.start()
+
+    def stop_button_poller(self):
+>>>>>>> 8dcc40738fa0fd8dd6cd593c56c8017db5cd6861
         '''
         function to stop a the threaded process that is polling for button pushes
         '''
@@ -60,6 +109,7 @@ class HWInterface():
         ''' This is a function that is only to be called in a threaded fashion,
         and will run if the global flag is set to do so.
         '''
+<<<<<<< HEAD
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.source_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         while self.poll_source_button:
@@ -67,6 +117,16 @@ class HWInterface():
             self.source_button_state = True
             if not self.source_button_state:
                 intic.index_source()
+=======
+        GPIO.setmode(GPIO.BOARD)
+        source_pin = int(gi.config_data['BASIC']['source_pin'])
+        GPIO.setup(source_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+        while self.poll_source_button:
+            source_button_state = GPIO.input(source_pin)
+            if source_button_state:
+                intic.index_source()
+                self.stop_lcd_scroll()
+>>>>>>> 8dcc40738fa0fd8dd6cd593c56c8017db5cd6861
                 time.sleep(0.2)
 
     def scan_and_connect_wifi(self):

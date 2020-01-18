@@ -6,8 +6,8 @@ import hw_interface as hwi
 
 
 logger = logging.getLogger('IINFO')
+console = logging.getLogger('CONSOLE')
 global runtime_flag
-
 
 def _init_loggers():
     ''' This creates all the logger objects for the evironment, and allows the
@@ -16,12 +16,13 @@ def _init_loggers():
         logger_object = logging.getLogger('LOGGER_NAME')
         logger_object.info('Data to log...')
 
-    Logger Names = 'IINFO', 'HWI', 'GAINFO', 'CONSOLE'
+    Logger Names = 'IINFO', 'HWI', 'GAINFO', 'CONSOLE', 'RPLCD'
 
     RETURNS --> No Return value
     '''
     logger_names = [['IINFO', False], ['HWI', False],
-                    ['GAINFO', True], ['CONSOLE', False]]
+                    ['GAINFO', True], ['CONSOLE', False],
+                    ['RPLCD', True]]
     if not os.path.isdir('./Logs'):
         os.mkdir('./Logs')
     for logger_data in logger_names:
@@ -33,23 +34,25 @@ def _init_loggers():
                          create_file=logger_data[1],
                          stream_to_console=to_console)
 
-
 def _abort():
     ''' Sets the runtime_flag == False, stopping the Main Loop '''
     global runtime_flag
     runtime_flag = False
 
-
 def index_source():
     ''' This will index the config_data -- source_index,
     so we can pull different media
     '''
-    gi.set_source_index(gi.get_source_index() + 1)
-
+    target_source = gi.get_source_index()
+    logger.info('Index Source: %s >> %s' % (target_source, target_source + 1))
+    print('Index Source: %s >> %s' % (target_source, target_source + 1))
+    gi.set_source_index(target_source + 1)
 
 def main():
-    to_call = 0
+    hardware_interface = hwi.HardWareInterface()
+    hardware_interface.start_button_poller()
     logger.info('#'*30 + ' Starting the Info Ticker ' + "#"*30)
+<<<<<<< HEAD
 
     if to_call == 1:
         weather_data = gi.gather_weather()
@@ -70,6 +73,27 @@ def main():
             time.sleep(1)
     local_hwi = hwi.HWInterface()
     local_hwi.write_to_lcd_screen(['test1', 'test2', 'test3'])
+=======
+    #weather_data = gi.gather_weather()
+
+    today_in_history = gi.gather_today_in_history()
+    reddit_posts = gi.gather_top_reddit()
+    #current_time = gi.gather_current_time()
+    twitter = [['Twitter-Test-1', 'Twitter-Test-2', 'Twitter-Test-3']]
+    stocks = [['Stocks-Test-1', 'Stocks-Test-2', 'Stocks-Test-3']]
+    weather = [['Weather-Test-1', 'Weather-Test-2', 'Weather-Test-3']]
+    clock = [['clock-Test-1', 'clock-Test-2', 'clock-Test-3']]
+    data_points = [reddit_posts, twitter, stocks, today_in_history, weather, clock]
+    while True:
+        # TODO -- if current time is over repoll_interval in the config.... gather and update the data_points LIST
+        try:
+            current_source = gi.get_source_index()  # (0=Reddit, 1=Twitter, 2=Stocks, 3=TodayInHistory, 4=Weather, 5=Clock)
+            hardware_interface.write_to_lcd_screen(data_points[current_source])
+        except KeyboardInterrupt:
+            console.info('Ending Script.....')
+    hardware_interface.stop_button_poller()
+    
+>>>>>>> 8dcc40738fa0fd8dd6cd593c56c8017db5cd6861
 
 if __name__ == "__main__":
     runtime_flag = True
