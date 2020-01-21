@@ -27,10 +27,13 @@ class HWInterface():
             self.service: str = info_to_write[0]
             self.source: str = info_to_write[1]
             self.string_to_write: str = info_to_write[2]
+
         screen_data = screen_data()
         for index, screen_item in screen_data:
             length_of_data = len(screen_item)
-            self.pi_lcd.cursor_pos(index, 0)  # move to the right row, and move to the Zero Position
+            #self.pi_lcd.cursor_pos(index, 0)  # move to the right row, and move to the Zero Position
+            print('Put this on the LCD: %s' % screen_item)
+
 
     def start_button_poller(self):
         '''
