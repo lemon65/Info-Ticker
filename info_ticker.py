@@ -50,8 +50,10 @@ def index_source():
 
 def main():
     local_hwi = hwi.HWInterface()
+    print('Button poller')
     local_hwi.start_button_poller()
     logger.info('#'*30 + ' Starting the Info Ticker ' + "#"*30)
+    print('Done...')
     to_call = 0
     if to_call == 1:
         weather_data = gi.gather_weather()
@@ -70,6 +72,7 @@ def main():
             current_time = gi.gather_current_time()
             print(current_time)
             time.sleep(1)
+    print('LCD Write?')
     local_hwi.write_to_lcd_screen(['test1', 'test2', 'test3'])
 
 if __name__ == "__main__":
