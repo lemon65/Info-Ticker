@@ -21,7 +21,7 @@ class HWInterface():
         self.poll_source_button = False
         self.source_pin = gi.config_data['BASIC']['source_pin']
 
-    def write_to_lcd_screen(self, string_to_write: str, row_start=0: int, element_start=0: int, clear_lcd=False: bool):
+    def write_to_lcd_screen(self, string_to_write: str, row_start: int = 0 , element_start: int = 0, clear_lcd: bool = False):
         """ This function writes a string to the LCD, and will auto scroll the text if its over
         the self.max_lcd_elements varaible.    
         
@@ -38,7 +38,7 @@ class HWInterface():
         self.pi_lcd.cursor_pos = (row_start, element_start) # move to the (row, element) position
         self.pi_lcd.write_string(screen_item)
 
-    def scroll_text_on_lcd(self, long_string: str, row_start=0: int, element_start=0: int):
+    def scroll_text_on_lcd(self, long_string: str, row_start: int = 0, element_start: int = 0):
         for idex in range(len(long_string) - self.max_lcd_elements + 1):
             string_to_write = long_string[idex:idex + self.max_lcd_elements]
             self.write_to_lcd_screen(string_to_write, row_start=row_start, element_start=element_start)
