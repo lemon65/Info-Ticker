@@ -21,41 +21,47 @@ class HWInterface():
         self.poll_source_button = False
         self.source_pin = gi.config_data['BASIC']['source_pin']
 
-    def write_to_lcd_screen(self, info_to_write):
-        '''
-        function to write to the 20x4 LCD screen attached to the Raspberry Pi
-        info_to_write = a nested list of data points
-            Element[0] -- service = Where is it coming from (Reddit, Twitter, News)
-            Element[1] -- source = Who is writing this? (Author, User, Etc.)
-            Element[2] -- string_to_write = a sting of data to write (title, weather data, Etc.)
-        '''
-        class screen_data(NamedTuple):
-            service: str
-            source: str
-            string_to_write: str
-
-        #screen_data = screen_data(info_to_write[0], info_to_write[1], info_to_write[2])
-        # for index, screen_item in enumerate(screen_data):
-        #     length_of_data = len(screen_item)
-        #     print('Put this on the LCD: %s' % screen_item)
-        #     self.pi_lcd.write_string(screen_item)
-        self.pi_lcd.clear()
-        for row in range(self.max_lcd_rows):
-            for element in range(self.max_lcd_elements):
-                self.pi_lcd.write_string('X')
-                print('r: %s, e: %s' % (row, element))
-                self.move_cursor_position(row, element)
-        print('Clearing')
-        self.pi_lcd.clear()
-
-    def move_cursor_position(self, row=0, element=0):
-        """Move the Cursor to the target position
+    def write_to_lcd_screen(self, string_to_write: str, row_start=0: int, element_start=0: int, clear_lcd=False: bool):
+        """ This function writes a string to the LCD, and will auto scroll the text if its over
+        the self.max_lcd_elements varaible.    
+        
+        Arguments:
+            string_to_write {str} -- [This is the string payload that you are writing to the LCD]
         
         Keyword Arguments:
-            row {int} -- [This is the ROW where you are moving the cursor] (default: {0})
-            element {int} -- [The is Element or Column where you are moving cursor] (default: {0})
+            row_start {[int]} -- [Starting ROW for the write operation] (default: {0:int})
+            element_start {[int]} -- [Starting ELEMENT for the write operation] (default: {0:int})
+            clear_lcd {[bool]} -- [clear the LCD before writing your data] (default: {False:bool})
         """
-        self.pi_lcd.cursor_pos = (row, element) # move to the (row, element) position
+        if clear_lcd:
+            self.pi_lcd.clear()
+        self.pi_lcd.cursor_pos = (row_start, element_start) # move to the (row, element) position
+        self.pi_lcd.write_string(screen_item)
+
+    def scroll_text_on_lcd(self, long_string: str, row_start=0: int, element_start=0: int):
+        for idex in range(len(long_string) - self.max_lcd_elements + 1):
+            string_to_write = long_string[idex:idex + self.max_lcd_elements]
+            self.write_to_lcd_screen(string_to_write, row_start=row_start, element_start=element_start)
+            time.sleep(0.2)
+
+    def display_data(self):
+        """[summary]
+        
+        Arguments:
+            info_to_write {list} -- [display the data]
+        """
+        # class screen_data(NamedTuple):
+        #     service: str
+        #     source: str
+        #     string_to_write: str
+
+        self.pi_lcd.clear()
+        # screen_data = screen_data(info_to_write[0], info_to_write[1], info_to_write[2])
+        # for screen_item in screen_data:
+        #     print('Writing: %s, Row: %s' % (screen_item, index))
+        #     length_of_data = len(screen_item)
+        self.write_to_lcd_screen('Hello World!', row_start=0)
+        self.scroll_text_on_lcd('THIS IS A TEST OF REALLY LONG TEXT, DOES IT SCROLL?????', row_start=1)
 
     def start_button_poller(self):
         '''
