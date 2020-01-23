@@ -2,7 +2,7 @@
 import logging, time, threading
 from typing import NamedTuple
 from RPLCD.i2c import CharLCD
-import RPi.GPIO
+import RPi.GPIO as GPIO
 import gather_info as gi
 import info_ticker as intic
 
@@ -58,10 +58,11 @@ class HWInterface():
         ''' This is a function that is only to be called in a threaded fashion,
         and will run if the global flag is set to do so.
         '''
+        
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.source_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         while self.poll_source_button:
-            # source_button_state = GPIO.input(source_pin)
+            source_button_state = GPIO.input(source_pin)
             self.source_button_state = True
             if not self.source_button_state:
                 intic.index_source()
