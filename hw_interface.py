@@ -11,8 +11,8 @@ class HWInterface():
     def __init__(self):
         self.pi_lcd = CharLCD('PCF8574', 0x27)
         self.poll_source_button = False
-        self.max_lcd_rows = int(gi.config_data['LCD']['max_lcd_rows'])
-        self.max_lcd_elements = int(gi.config_data['LCD']['max_lcd_elements'])
+        self.max_lcd_rows = int(gi.config_data['LCDDATA']['max_lcd_rows'])
+        self.max_lcd_elements = int(gi.config_data['LCDDATA']['max_lcd_elements'])
         self.source_pin = int(gi.config_data['BASIC']['source_pin'])
 
     def write_to_lcd_screen(self, info_to_write):
