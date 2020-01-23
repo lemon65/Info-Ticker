@@ -9,7 +9,7 @@ logger = logging.getLogger('HWI')
 
 class HWInterface():
     def __init__(self):
-        self.pi_lcd = CharLCD('PCF8574', 0x27)
+        self.pi_lcd = CharLCD(numbering_mode=GPIO.BCM)
         self.poll_source_button = False
         self.max_lcd_rows = int(gi.config_data['LCD']['max_lcd_rows'])
         self.max_lcd_elements = int(gi.config_data['LCD']['max_lcd_elements'])
