@@ -38,12 +38,12 @@ class HWInterface():
     def start_button_poller(self):
         '''
         function to start a threaded process and poll for button pushes,
-        starts _source_button_poller()
+        starts self._source_button_poller()
         '''
         if not self.poll_source_button:
             logger.info('Starting the Source_Button polling Thread...')
             self.poll_source_button = True
-            button_polling_thread = threading.Thread(name="button_polling_thread", target=_source_button_poller)
+            button_polling_thread = threading.Thread(name="button_polling_thread", target=self._source_button_poller)
             button_polling_thread.start()
 
     def stop_button_poller(self):
