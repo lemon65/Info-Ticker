@@ -2,7 +2,7 @@
 import logging, time, threading
 from typing import NamedTuple
 from RPLCD.i2c import CharLCD
-import RPi.GPIO as GPIO
+from gpiozero import Button
 import gather_info as gi
 import info_ticker as intic
 
@@ -25,14 +25,14 @@ class HWInterface():
             Element[2] -- string_to_write = a sting of data to write (title, weather data, Etc.)
         '''
         class screen_data(NamedTuple):
-            self.service: str = info_to_write[0]
-            self.source: str = info_to_write[1]
-            self.string_to_write: str = info_to_write[2]
+            self.service: str
+            self.source: str
+            self.string_to_write: str
 
-        screen_data = screen_data()
+        screen_data = screen_data(info_to_write[0], info_to_write[1], info_to_write[2])
         for index, screen_item in screen_data:
             length_of_data = len(screen_item)
-            #self.pi_lcd.cursor_pos(index, 0)  # move to the right row, and move to the Zero Position
+            self.pi_lcd.cursor_pos(index, 0)  # move to the right row, and move to the Zero Position
             print('Put this on the LCD: %s' % screen_item)
 
 
@@ -58,12 +58,9 @@ class HWInterface():
         ''' This is a function that is only to be called in a threaded fashion,
         and will run if the global flag is set to do so.
         '''
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.source_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        source_button = Button(self.source_pin)
         while self.poll_source_button:
-            source_button_state = GPIO.input(self.source_pin)
-            print('PIN State: %s' % source_button_state)
-            if not source_button_state:
+            if source_button.when_pressed:
                 intic.index_source()
                 time.sleep(0.2)
 
