@@ -2,6 +2,7 @@
 import logging, time, threading
 from typing import NamedTuple
 from RPLCD.i2c import CharLCD
+import RPi.GPIO
 import gather_info as gi
 import info_ticker as intic
 
