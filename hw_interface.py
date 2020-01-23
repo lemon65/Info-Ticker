@@ -10,10 +10,15 @@ logger = logging.getLogger('HWI')
 
 class HWInterface():
     def __init__(self):
-        self.pi_lcd = CharLCD('PCF8574', 0x27)
-        self.poll_source_button = False
+        # Variables for the LCD
         self.max_lcd_rows = int(gi.config_data['LCDDATA']['max_lcd_rows'])
         self.max_lcd_elements = int(gi.config_data['LCDDATA']['max_lcd_elements'])
+        self.lcd_address = gi.config_data['BASIC']['lcd_address']
+        self.lcd_expander = gi.config_data['BASIC']['lcd_expander']
+        self.pi_lcd = CharLCD(i2c_expander=self.lcd_expander, address=self.lcd_address,
+                              cols=self.max_lcd_elements, rows=self.max_lcd_rows)
+        # Variables for the Source Button
+        self.poll_source_button = False
         self.source_pin = gi.config_data['BASIC']['source_pin']
 
     def write_to_lcd_screen(self, info_to_write):
@@ -32,7 +37,7 @@ class HWInterface():
         screen_data = screen_data(info_to_write[0], info_to_write[1], info_to_write[2])
         for index, screen_item in enumerate(screen_data):
             length_of_data = len(screen_item)
-            self.pi_lcd.cursor_pos(index, 0)  # move to the right row, and move to the Zero Position
+            #self.pi_lcd.cursor_pos(index, 0)  # move to the right row, and move to the Zero Position
             print('Put this on the LCD: %s' % screen_item)
             self.pi_lcd.write_string(screen_item)
 
