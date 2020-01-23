@@ -25,16 +25,16 @@ class HWInterface():
             Element[2] -- string_to_write = a sting of data to write (title, weather data, Etc.)
         '''
         class screen_data(NamedTuple):
-            self.service: str
-            self.source: str
-            self.string_to_write: str
+            service: str
+            source: str
+            string_to_write: str
 
         screen_data = screen_data(info_to_write[0], info_to_write[1], info_to_write[2])
-        for index, screen_item in screen_data:
+        for index, screen_item in enumerate(screen_data):
             length_of_data = len(screen_item)
             self.pi_lcd.cursor_pos(index, 0)  # move to the right row, and move to the Zero Position
             print('Put this on the LCD: %s' % screen_item)
-
+            self.pi_lcd.write_string(screen_item)
 
     def start_button_poller(self):
         '''
@@ -60,7 +60,7 @@ class HWInterface():
         '''
         source_button = Button(self.source_pin, pull_up=False)
         while self.poll_source_button:
-            if source_button.when_pressed:
+            if source_button.is_pressed:
                 intic.index_source()
             time.sleep(0.2)
 
