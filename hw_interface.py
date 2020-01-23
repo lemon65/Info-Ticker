@@ -15,8 +15,9 @@ class HWInterface():
         self.max_lcd_elements = int(gi.config_data['LCDDATA']['max_lcd_elements'])
         self.lcd_address = gi.config_data['LCDDATA']['lcd_address']
         self.lcd_expander = gi.config_data['LCDDATA']['lcd_expander']
-        self.pi_lcd = CharLCD(i2c_expander=self.lcd_expander, address=self.lcd_address,
-                              cols=self.max_lcd_elements, rows=self.max_lcd_rows)
+        self.pi_lcd = CharLCD(i2c_expander=self.lcd_expander, address=self.lcd_address, port=1,
+                              cols=self.max_lcd_elements, rows=self.max_lcd_rows, dotsize=8,
+                              charmap='A02', auto_linebreaks=True, backlight_enabled=True)
         # Variables for the Source Button
         self.poll_source_button = False
         self.source_pin = gi.config_data['BASIC']['source_pin']
