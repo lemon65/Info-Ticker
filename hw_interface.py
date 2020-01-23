@@ -34,12 +34,28 @@ class HWInterface():
             source: str
             string_to_write: str
 
-        screen_data = screen_data(info_to_write[0], info_to_write[1], info_to_write[2])
-        for index, screen_item in enumerate(screen_data):
-            length_of_data = len(screen_item)
-            self.pi_lcd.cursor_pos(index, 0)  # move to the right row, and move to the Zero Position
-            print('Put this on the LCD: %s' % screen_item)
-            self.pi_lcd.write_string(screen_item)
+        #screen_data = screen_data(info_to_write[0], info_to_write[1], info_to_write[2])
+        # for index, screen_item in enumerate(screen_data):
+        #     length_of_data = len(screen_item)
+        #     print('Put this on the LCD: %s' % screen_item)
+        #     self.pi_lcd.write_string(screen_item)
+        self.pi_lcd.clear()
+        for row in range(self.max_lcd_rows):
+            for element in range(self.max_lcd_elements):
+                self.pi_lcd.write_string('X')
+                print('r: %s, e: %s' % (row, element))
+                self.move_cursor_position(row, element)
+        print('Clearing')
+        self.pi_lcd.clear()
+
+    def move_cursor_position(self, row=0, element=0):
+        """Move the Cursor to the target position
+        
+        Keyword Arguments:
+            row {int} -- [This is the ROW where you are moving the cursor] (default: {0})
+            element {int} -- [The is Element or Column where you are moving cursor] (default: {0})
+        """
+        self.pi_lcd.cursor_pos = (row, element) # move to the (row, element) position
 
     def start_button_poller(self):
         '''
