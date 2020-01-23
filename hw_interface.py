@@ -36,7 +36,7 @@ class HWInterface():
         if clear_lcd:
             self.pi_lcd.clear()
         self.pi_lcd.cursor_pos = (row_start, element_start) # move to the (row, element) position
-        self.pi_lcd.write_string(screen_item)
+        self.pi_lcd.write_string(string_to_write)
 
     def scroll_text_on_lcd(self, long_string: str, row_start: int = 0, element_start: int = 0):
         for idex in range(len(long_string) - self.max_lcd_elements + 1):

@@ -71,7 +71,8 @@ def main():
             print(current_time)
             time.sleep(1)
     print('LCD Write?')
-    local_hwi.write_to_lcd_screen(['test1', 'test2', 'test3'])
+    local_hwi.display_data()
+
 
 if __name__ == "__main__":
     runtime_flag = True
