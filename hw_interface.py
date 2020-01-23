@@ -14,7 +14,7 @@ class HWInterface():
         self.poll_source_button = False
         self.max_lcd_rows = int(gi.config_data['LCDDATA']['max_lcd_rows'])
         self.max_lcd_elements = int(gi.config_data['LCDDATA']['max_lcd_elements'])
-        self.source_pin = int(gi.config_data['BASIC']['source_pin'])
+        self.source_pin = gi.config_data['BASIC']['source_pin']
 
     def write_to_lcd_screen(self, info_to_write):
         '''
@@ -58,11 +58,11 @@ class HWInterface():
         ''' This is a function that is only to be called in a threaded fashion,
         and will run if the global flag is set to do so.
         '''
-        source_button = Button(pin=self.source_pin, pull_up=False)
+        source_button = Button(self.source_pin, pull_up=False)
         while self.poll_source_button:
             if source_button.when_pressed:
                 intic.index_source()
-                time.sleep(0.2)
+            time.sleep(0.2)
 
     def scan_and_connect_wifi(self):
         '''
