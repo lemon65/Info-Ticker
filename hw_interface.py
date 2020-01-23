@@ -63,8 +63,7 @@ class HWInterface():
         GPIO.setup(self.source_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         while self.poll_source_button:
             source_button_state = GPIO.input(source_pin)
-            self.source_button_state = True
-            if not self.source_button_state:
+            if not source_button_state:
                 intic.index_source()
                 time.sleep(0.2)
 
