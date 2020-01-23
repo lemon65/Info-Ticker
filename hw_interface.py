@@ -58,7 +58,7 @@ class HWInterface():
         ''' This is a function that is only to be called in a threaded fashion,
         and will run if the global flag is set to do so.
         '''
-        source_button = Button(self.source_pin)
+        source_button = Button(pin=self.source_pin, pull_up=False)
         while self.poll_source_button:
             if source_button.when_pressed:
                 intic.index_source()
