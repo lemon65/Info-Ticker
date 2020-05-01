@@ -86,6 +86,7 @@ def main():
             local_hwi.display_data(display_choice)
             display_timer = time.time() + dp_interval
         last_source_state = current_source_button
+        time.sleep(0.5)
 
 
 if __name__ == "__main__":
