@@ -42,7 +42,7 @@ class HWInterface():
         for idex in range(len(long_string) - self.max_lcd_elements + 1):
             string_to_write = long_string[idex:idex + self.max_lcd_elements]
             self.write_to_lcd_screen(string_to_write, row_start=row_start, element_start=element_start)
-            time.sleep(0.2)
+            time.sleep(0.4)
 
     def display_data(self):
         """[summary]
