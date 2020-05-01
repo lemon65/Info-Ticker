@@ -1,5 +1,12 @@
 #!/usr/bin/python3
-import sys, os, time, requests, logging, codecs, feedparser, datetime
+import sys
+import os
+import time
+import requests
+import logging
+import codecs
+import feedparser
+import datetime
 from configparser import ConfigParser
 
 
@@ -77,6 +84,37 @@ def set_source_index(target_index):
     logger.info('Setting source_index = %s' % target_index)
     config_data['BASIC']['source_index'] = str(target_index)
 
+def build_data_blob():
+    """
+    Calls all the gathering functions and builds a blob of data for display.
+
+    Map - (0=Reddit, 1=Twitter, 2=Stocks, 3=TodayInHistory, 4=Weather)
+    """
+    data_blob = {}
+    # {"reddit": gather_top_reddit,
+    #            "twitter": gather_top_tweets,
+    #            "stocks": gather_stocks,
+    #            "today_in_history": gather_today_in_history,
+    #            "weather": gather_weather}
+    targets = {"today_in_history": gather_today_in_history}
+    for func_name, function in targets.items():
+        data_blob[func_name] = function()
+    return data_blob
+
+def eval_source_state(current_source_index):
+    """Evals an int into a key for the data blob
+
+    Arguments:
+        current_source_index {[INT]} -- Value to equate an INT to a String value(Key in a dict)
+    """
+    int_map = {0: "reddit",
+               1: "twitter",
+               2: "stocks",
+               3: "today_in_history",
+               4: "weather",
+               5: "clock"}
+    return int_map.get(current_source_index)
+
 def get_request(target_url, params=None, headers=None, auth=None, timeout=30, response_type='JSON'):
     '''
     Uses the requests lib to GET the URL and returns the response or logs the
@@ -134,7 +172,7 @@ def gather_top_tweets():
 
     returns -- Nested List
     '''
-    return [['']]
+    return [['Twitter', '', '', '']]
 
 def gather_weather():
     '''
@@ -173,7 +211,7 @@ def gather_stocks():
 
     returns -- Nested List
     '''
-    return [['']]
+    return [['Stocks', '', '', '']]
 
 def gather_today_in_history():
     '''
@@ -192,7 +230,7 @@ def gather_today_in_history():
             service = 'Today in History, %s' % current_date
             source = ''
             event_string = event_dict.get('year') + ' - ' + event_dict.get('text')
-            master_data.append([service, source, event_string])
+            master_data.append([service, source, '', event_string])
     return master_data
 
 def gather_current_time():
@@ -204,4 +242,4 @@ def gather_current_time():
     time_format = config_data['CLOCK']['time_format']
     current_time = datetime.datetime.now()
     current_time = current_time.strftime(time_format)
-    return current_time
+    return [[current_time, '', '', '']]

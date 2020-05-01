@@ -1,5 +1,9 @@
 #!/usr/bin/python3
-import os, sys, time, logging
+import os
+import sys
+import time
+import random
+import logging
 import gather_info as gi
 import create_logger as cl
 import hw_interface as hwi
@@ -51,27 +55,37 @@ def index_source():
 def main():
     local_hwi = hwi.HWInterface()
     local_hwi.start_button_poller()
+    rp_interval = gi.config_data['BASIC']['repoll_interval']
+    dp_interval = gi.config_data['BASIC']['display_interval']
+    display_blob = {}
+    repoll_timer = None
+    display_timer = None
+    last_source_state = None
     logger.info('#'*30 + ' Starting the Info Ticker ' + "#"*30)
-    to_call = 0
-    if to_call == 1:
-        weather_data = gi.gather_weather()
-        for i in weather_data:
-            print(i)
-    if to_call == 2:
-        today_in_history = gi.gather_today_in_history()
-        for i in today_in_history:
-            print(i)
-    if to_call == 3:
-        reddit_posts = gi.gather_top_reddit()
-        for i in reddit_posts:
-            print(i)
-    if to_call == 4:
-        while True:
-            current_time = gi.gather_current_time()
-            print(current_time)
-            time.sleep(1)
-    print('LCD Write?')
-    local_hwi.display_data()
+
+    while runtime_flag:
+        current_source_button = gi.get_source_index()
+        if not last_source_state:
+            last_source_state = current_source_button
+        if last_source_state != current_source_button:
+            display_timer = None
+        content_key = gi.eval_source_state(current_source_button)
+        if not display_blob or repoll_timer < time.time():
+            console.info("Building new data blob...")
+            display_blob = gi.build_data_blob()
+        if not repoll_timer or repoll_timer < time.time():  # repoll_interval for getting new data from the net
+            repoll_timer = time.time() + rp_interval
+        if not display_timer or display_timer < time.time():
+            console.info("Displaying: %s" % content_key)
+            display_list = display_blob.get(content_key)
+            if display_list:
+                display_choice = random.choice(display_list)
+            else:
+                console.error("No data at source Index: %s" % current_source_button)
+                continue
+            local_hwi.display_data(display_choice)
+            display_timer = time.time() + dp_interval
+        last_source_state = current_source_button
 
 
 if __name__ == "__main__":
