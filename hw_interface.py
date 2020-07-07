@@ -16,7 +16,7 @@ class HWInterface():
         self.lcd_address = gi.config_data['LCDDATA']['lcd_address']
         self.lcd_expander = gi.config_data['LCDDATA']['lcd_expander']
         self.pi_lcd = CharLCD(i2c_expander=self.lcd_expander, address=self.lcd_address,
-                              cols=self.max_lcd_elements, rows=self.max_lcd_rows)
+                              cols=self.max_lcd_elements, rows=self.max_lcd_rows, auto_linebreaks=True)
         # Variables for the Source Button
         self.poll_source_button_flag = False
         self.source_pin = gi.config_data['BASIC']['source_pin']
@@ -85,6 +85,7 @@ class HWInterface():
                 time.sleep(0.5)
         logger.info("Scrolling_Text Thread is stopped")
         self.pi_lcd.clear()
+        return
 
     def start_button_poller(self):
         '''
