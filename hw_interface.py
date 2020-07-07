@@ -64,7 +64,7 @@ class HWInterface():
         scroll_polling_thread.start()
 
     def stop_text_scroll(self):
-        """ Stops the scrolling of text, by stoping"""
+        """ Stops the scrolling of text, by stoping """
         logger.info('Stopping the Scrolling_Text polling Thread...')
         self.scrolling_text_flag = False
         time.sleep(0.9)
