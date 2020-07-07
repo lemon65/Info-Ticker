@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-import logging, time
+import logging, time, threading
 from typing import NamedTuple
 from RPLCD.i2c import CharLCD
 from gpiozero import Button
