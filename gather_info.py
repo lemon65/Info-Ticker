@@ -11,6 +11,7 @@ from configparser import ConfigParser
 
 
 logger = logging.getLogger('GAINFO')
+console = logging.getLogger('CONSOLE')
 
 def read_config():
     '''
@@ -99,6 +100,7 @@ def build_data_blob():
     targets = {"today_in_history": gather_today_in_history}
     for func_name, function in targets.items():
         data_blob[func_name] = function()
+    console.info('Done building data blob...')
     return data_blob
 
 def eval_source_state(current_source_index):

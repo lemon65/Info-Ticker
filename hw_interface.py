@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-import logging, time, threading
+import logging, time
 from typing import NamedTuple
 from RPLCD.i2c import CharLCD
 from gpiozero import Button
@@ -21,12 +21,9 @@ class HWInterface():
         self.poll_source_button_flag = False
         self.source_pin = gi.config_data['BASIC']['source_pin']
 
-        # variables for the scrolling text
-        self.scrolling_text_flag = False
 
     def write_to_lcd_screen(self, string_to_write: str, row_start: int, element_start: int, clear_lcd: bool = False):
-        """ This function writes a string to the LCD, and will auto scroll the text if its over
-        the self.max_lcd_elements varaible.    
+        """ This function writes a string to the LCD
         
         Arguments:
             string_to_write {str} -- [This is the string payload that you are writing to the LCD]
@@ -48,48 +45,11 @@ class HWInterface():
         Arguments:
             data_list {list} -- list of strings to display onto the LCD -- len(4)
         """
-        self.stop_text_scroll()
         for index, line in enumerate(data_list):
             print("Line: %s, Data: %s" % (index, line))
-            line_length = len(line)
-            if line_length < self.max_lcd_elements:
-                self.write_to_lcd_screen(line, index, 0)
-            else:
-                self.start_text_scroll(line, index, 0)
+            self.write_to_lcd_screen(line, index, 0)
 
-    def start_text_scroll(self, long_string: str, row: int, element_start: int):
-        logger.info('Starting the Scrolling_Text polling Thread, for Row: %s' % row)
-        scroll_args = (long_string, row, element_start)
-        scroll_polling_thread = threading.Thread(name="scrolling_text_thread_%s" % int(time.time()), target=self._scroll_text_on_lcd, args=scroll_args)
-        scroll_polling_thread.start()
 
-    def stop_text_scroll(self):
-        """ Stops the scrolling of text, by stoping """
-        logger.info('Stopping the Scrolling_Text polling Thread...')
-        self.scrolling_text_flag = False
-        time.sleep(0.9)
-
-    def _scroll_text_on_lcd(self, long_string: str, row_start: int, element_start: int):
-        """ This scrolls text accross the LCD screen once, to be called
-        Arguments:
-            long_string {str} -- this is the long string that you want to display
-        Keyword Arguments:
-            row_start {int} -- row that you want to display your data on (default: {0})
-            element_start {int} -- element that you want to display your data on (default: {0})
-        """
-        self.scrolling_text_flag = True
-        while self.scrolling_text_flag:
-            print("Scroll -- %s, %s" % (row_start, element_start))
-            for idex in range(len(long_string) - self.max_lcd_elements + 1):
-                print("Scroll2 -- %s, %s" % (row_start, element_start))
-                if not self.scrolling_text_flag:  # Full Stop scrolling_text_flag == False
-                    break
-                string_to_write = long_string[idex:idex + self.max_lcd_elements]
-                self.write_to_lcd_screen(string_to_write, row_start, element_start)
-                time.sleep(0.5)
-        print("Scrolling_Text Thread is stopped")
-        self.pi_lcd.clear()
-        return
 
     def start_button_poller(self):
         '''

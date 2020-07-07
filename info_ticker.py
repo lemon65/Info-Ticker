@@ -80,6 +80,7 @@ def main():
                 display_choice = random.choice(display_list)
             else:
                 continue
+            console.info(display_choice)
             local_hwi.display_data(display_choice)
             display_timer = time.time() + dp_interval
         last_source_state = current_source_button
