@@ -13,6 +13,7 @@ class HWInterface():
         # Variables for the LCD
         self.max_lcd_rows = int(gi.config_data['LCDDATA']['max_lcd_rows'])
         self.max_lcd_elements = int(gi.config_data['LCDDATA']['max_lcd_elements'])
+        self.max_chars = self.max_lcd_rows * self.max_lcd_elements
         self.lcd_address = gi.config_data['LCDDATA']['lcd_address']
         self.lcd_expander = gi.config_data['LCDDATA']['lcd_expander']
         self.pi_lcd = CharLCD(i2c_expander=self.lcd_expander, address=self.lcd_address,
@@ -39,15 +40,16 @@ class HWInterface():
         self.pi_lcd.cursor_pos = (row_start, element_start) # move to the (row, element) position
         self.pi_lcd.write_string(string_to_write)
 
-    def display_data(self, data_list):
-        """Takes a list of data from the info_ticker main and displays in on the LCD
+    def display_data(self, data_string):
+        """Takes a string of data from the info_ticker main and displays in on the LCD
         
         Arguments:
-            data_list {list} -- list of strings to display onto the LCD -- len(4)
+            data_string {string} -- list of strings to display onto the LCD -- len(4)
         """
-        for index, line in enumerate(data_list):
-            print("Line: %s, Data: %s" % (index, line))
-            self.write_to_lcd_screen(line, index, 0)
+        if len(data_string) > self.max_chars:
+            data_string = data_string[:self.max_lcd_elements]
+        print("Data: %s" % data_string)
+        self.write_to_lcd_screen(data_string, 0, 0)
 
     def start_button_poller(self):
         '''

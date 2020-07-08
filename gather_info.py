@@ -164,7 +164,7 @@ def gather_top_reddit():
                 service = 'Reddit-%s' % sub  # Creates a Site/Sub service name
                 source = feed_dict.get('author')
                 title = feed_dict.get('title')
-                post_data = [service, source, title]
+                post_data = service + source + title
                 reddit_posts.append(post_data)
     return reddit_posts
 
@@ -174,7 +174,7 @@ def gather_top_tweets():
 
     returns -- Nested List
     '''
-    return [['Twitter', '', '', '']]
+    return ['Twitter']
 
 def gather_weather():
     '''
@@ -213,7 +213,7 @@ def gather_stocks():
 
     returns -- Nested List
     '''
-    return [['Stocks', '', '', '']]
+    return ['Stocks']
 
 def gather_today_in_history():
     '''
@@ -229,9 +229,9 @@ def gather_today_in_history():
     if response:
         events = response.get('data')['Events']
         for event_dict in events:
-            service = 'Today in History, %s' % current_date
+            service = 'TIH, %s' % current_date
             event_string = event_dict.get('year') + ' - ' + event_dict.get('text')
-            master_data.append([service, event_string, '', ''])
+            master_data.append(service + event_string)
     return master_data
 
 def gather_current_time():
@@ -243,4 +243,4 @@ def gather_current_time():
     time_format = config_data['CLOCK']['time_format']
     current_time = datetime.datetime.now()
     current_time = current_time.strftime(time_format)
-    return [[current_time, '', '', '']]
+    return [current_time]
