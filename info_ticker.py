@@ -70,11 +70,11 @@ def main():
         if last_source_state != current_source_button:
             display_timer = None
         content_key = gi.eval_source_state(current_source_button)
+        if not repoll_timer or repoll_timer < time.time():  # repoll_interval for getting new data from the net
+            repoll_timer = time.time() + rp_interval
         if repoll_timer < time.time():
             print("Repoll the data")
             display_blob = gi.build_data_blob()
-        if not repoll_timer or repoll_timer < time.time():  # repoll_interval for getting new data from the net
-            repoll_timer = time.time() + rp_interval
         if not display_timer or display_timer < time.time():
             display_list = display_blob.get(content_key)
             if display_list:
