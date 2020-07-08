@@ -230,9 +230,8 @@ def gather_today_in_history():
         events = response.get('data')['Events']
         for event_dict in events:
             service = 'Today in History, %s' % current_date
-            source = ''
             event_string = event_dict.get('year') + ' - ' + event_dict.get('text')
-            master_data.append([service, source, '', event_string])
+            master_data.append([service, event_string, '', ''])
     return master_data
 
 def gather_current_time():

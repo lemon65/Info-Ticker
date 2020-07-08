@@ -49,8 +49,6 @@ class HWInterface():
             print("Line: %s, Data: %s" % (index, line))
             self.write_to_lcd_screen(line, index, 0)
 
-
-
     def start_button_poller(self):
         '''
         function to start a threaded process and poll for button pushes,
