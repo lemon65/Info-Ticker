@@ -47,7 +47,7 @@ class HWInterface():
             data_string {string} -- list of strings to display onto the LCD -- len(4)
         """
         if len(data_string) > self.max_chars:
-            data_string = data_string[:self.max_lcd_elements]
+            data_string = data_string[:self.max_chars]
         print("Data: %s" % data_string)
         self.write_to_lcd_screen(data_string, 0, 0)
 
