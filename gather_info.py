@@ -97,7 +97,8 @@ def build_data_blob():
     #            "stocks": gather_stocks,
     #            "today_in_history": gather_today_in_history,
     #            "weather": gather_weather}
-    targets = {"today_in_history": gather_today_in_history}
+    targets = {"today_in_history": gather_today_in_history,
+               "clock": gather_current_time}
     for func_name, function in targets.items():
         data_blob[func_name] = function()
     console.info('Done building data blob...')

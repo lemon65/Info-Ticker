@@ -74,7 +74,7 @@ def main():
             display_blob = gi.build_data_blob()
         if not repoll_timer or repoll_timer < time.time():  # repoll_interval for getting new data from the net
             repoll_timer = time.time() + rp_interval
-        if not display_timer or display_timer < time.time():
+        if not display_timer or display_timer < time.time() or current_source_button == 5:
             display_list = display_blob.get(content_key)
             if display_list:
                 display_choice = random.choice(display_list)
