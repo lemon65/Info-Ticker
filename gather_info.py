@@ -229,8 +229,8 @@ def gather_today_in_history():
     if response:
         events = response.get('data')['Events']
         for event_dict in events:
-            service = 'TIH, %s' % current_date
-            event_string = event_dict.get('year') + ' - ' + event_dict.get('text')
+            service = "THI - "
+            event_string = event_dict.get('year') + ': ' + event_dict.get('text')
             master_data.append(service + event_string)
     return master_data
 
