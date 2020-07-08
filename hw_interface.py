@@ -13,6 +13,7 @@ class HWInterface():
         # Variables for the LCD
         self.max_lcd_rows = int(gi.config_data['LCDDATA']['max_lcd_rows'])
         self.max_lcd_elements = int(gi.config_data['LCDDATA']['max_lcd_elements'])
+        self.display_interval = int(gi.config_data['BASIC']['display_interval'])
         self.max_chars = self.max_lcd_rows * self.max_lcd_elements
         self.lcd_address = gi.config_data['LCDDATA']['lcd_address']
         self.lcd_expander = gi.config_data['LCDDATA']['lcd_expander']
@@ -46,10 +47,12 @@ class HWInterface():
             data_string {string} -- list of strings to display onto the LCD -- len(4)
         """
         string_chunks = [data_string[i:i+self.max_chars] for i in range(0, len(data_string), self.max_chars)]
-        for step_string in string_chunks:
-            print("Data: %s" % step_string)
-            self.write_to_lcd_screen(step_string, 0, 0, clear_lcd=True)
-            time.sleep(3)
+        end_time = int(time.time()) + self.display_interval
+        while(int(time.time()) < end_time):
+            for step_string in string_chunks:
+                print("Data: %s" % step_string)
+                self.write_to_lcd_screen(step_string, 0, 0, clear_lcd=True)
+                time.sleep(3)
 
     def start_button_poller(self):
         '''

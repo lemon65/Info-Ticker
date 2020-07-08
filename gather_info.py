@@ -92,7 +92,7 @@ def build_data_blob():
     Map - (0=Reddit, 1=Twitter, 2=Stocks, 3=TodayInHistory, 4=Weather)
     """
     data_blob = {}
-    # {"reddit": gather_top_reddit,
+    # targets = {"reddit": gather_top_reddit,
     #            "twitter": gather_top_tweets,
     #            "stocks": gather_stocks,
     #            "today_in_history": gather_today_in_history,
