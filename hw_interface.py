@@ -36,7 +36,6 @@ class HWInterface():
         """
         if clear_lcd:
             self.pi_lcd.clear()
-        print("Cursor Move -- %s, %s" % (row_start, element_start))
         self.pi_lcd.cursor_pos = (row_start, element_start) # move to the (row, element) position
         self.pi_lcd.write_string(string_to_write)
 
@@ -46,10 +45,11 @@ class HWInterface():
         Arguments:
             data_string {string} -- list of strings to display onto the LCD -- len(4)
         """
-        if len(data_string) > self.max_chars:
-            data_string = data_string[:self.max_chars]
-        print("Data: %s" % data_string)
-        self.write_to_lcd_screen(data_string, 0, 0)
+        string_chunks = [data_string[i:i+self.max_chars] for i in range(0, len(data_string), self.max_chars)]
+        for step_string in string_chunks:
+            print("Data: %s" % step_string)
+            self.write_to_lcd_screen(step_string, 0, 0)
+            time.sleep(3)
 
     def start_button_poller(self):
         '''
