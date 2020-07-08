@@ -48,13 +48,10 @@ class HWInterface():
         """
         string_chunks = [data_string[i:i+self.max_chars] for i in range(0, len(data_string), self.max_chars)]
         end_time = int(time.time()) + self.display_interval
-        current_source_index = gi.get_source_index()
         while(int(time.time()) < end_time):
             for step_string in string_chunks:
                 print("Data: %s" % step_string)
                 self.write_to_lcd_screen(step_string, 0, 0, clear_lcd=True)
-                if current_source_index == 5:
-                    break
                 time.sleep(5)
 
     def start_button_poller(self):
