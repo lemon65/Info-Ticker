@@ -57,7 +57,7 @@ def main():
     local_hwi.start_button_poller()
     rp_interval = gi.config_data['BASIC']['repoll_interval']
     dp_interval = gi.config_data['BASIC']['display_interval']
-    display_blob = {}
+    display_blob = gi.build_data_blob()
     repoll_timer = None
     display_timer = None
     last_source_state = None
@@ -70,11 +70,12 @@ def main():
         if last_source_state != current_source_button:
             display_timer = None
         content_key = gi.eval_source_state(current_source_button)
-        if not display_blob or repoll_timer < time.time():
+        if repoll_timer < time.time():
+            print("Repoll the data")
             display_blob = gi.build_data_blob()
         if not repoll_timer or repoll_timer < time.time():  # repoll_interval for getting new data from the net
             repoll_timer = time.time() + rp_interval
-        if not display_timer or display_timer < time.time() or current_source_button == 5:
+        if not display_timer or display_timer < time.time():
             display_list = display_blob.get(content_key)
             if display_list:
                 display_choice = random.choice(display_list)
