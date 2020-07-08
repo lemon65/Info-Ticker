@@ -48,7 +48,7 @@ class HWInterface():
         string_chunks = [data_string[i:i+self.max_chars] for i in range(0, len(data_string), self.max_chars)]
         for step_string in string_chunks:
             print("Data: %s" % step_string)
-            self.write_to_lcd_screen(step_string, 0, 0)
+            self.write_to_lcd_screen(step_string, 0, 0, clear_lcd=True)
             time.sleep(3)
 
     def start_button_poller(self):
