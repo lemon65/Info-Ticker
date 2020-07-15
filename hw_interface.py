@@ -46,16 +46,21 @@ class HWInterface():
         Arguments:
             data_string {string} -- list of strings to display onto the LCD -- len(4)
         """
+        chunk_display_secs = 7
         string_chunks = [data_string[i:i+self.max_chars] for i in range(0, len(data_string), self.max_chars)]
         end_time = int(time.time()) + self.display_interval
         start_source_index = gi.get_source_index()
         while(int(time.time()) < end_time):
             for step_string in string_chunks:
-                if start_source_index != gi.get_source_index():
-                    break
                 print("Data: %s" % step_string)
-                self.write_to_lcd_screen(step_string, 0, 0, clear_lcd=True)
-                time.sleep(7)
+                self.pi_lcd.clear()
+                counter = 0
+                while counter < chunk_display_secs * 2:
+                    if start_source_index != gi.get_source_index():
+                        return
+                    self.write_to_lcd_screen(step_string, 0, 0)
+                    time.sleep(0.5)  # sleep for 0.5sec, which we are using the chunk_display_secs * 2, to get normal seconds
+                    counter += 1
 
     def start_button_poller(self):
         '''
