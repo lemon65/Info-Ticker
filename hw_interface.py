@@ -52,7 +52,7 @@ class HWInterface():
             for step_string in string_chunks:
                 print("Data: %s" % step_string)
                 self.write_to_lcd_screen(step_string, 0, 0, clear_lcd=True)
-                time.sleep(5)
+                time.sleep(7)
 
     def start_button_poller(self):
         '''
