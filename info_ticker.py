@@ -59,7 +59,6 @@ def main():
     dp_interval = gi_obj.config_data['BASIC']['display_interval']
     display_blob = gi_obj.build_data_blob()
     repoll_timer = time.time() + rp_interval
-    repoll_timer = None
     display_timer = None
     last_source_state = None
     logger.info('#'*30 + ' Starting the Info Ticker ' + "#"*30)
