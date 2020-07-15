@@ -57,7 +57,6 @@ def main():
     local_hwi.start_button_poller()
     rp_interval = gi_obj.config_data['BASIC']['repoll_interval']
     dp_interval = gi_obj.config_data['BASIC']['display_interval']
-    display_blob = gi_obj.build_data_blob()
     repoll_timer = time.time() + rp_interval
     display_timer = None
     last_source_state = None
@@ -70,11 +69,12 @@ def main():
         if last_source_state != current_source_button:
             display_timer = None
         content_key = gi_obj.eval_source_state(current_source_button)
-        if repoll_timer < time.time() or content_key == "clock":
-            display_blob = gi_obj.build_data_blob(target_key=content_key)
+        print(content_key)
+        if repoll_timer < time.time() or content_key == "clock":  # get new data after 300s, or poll Clock
+            gi_obj.build_data_blob(target_key=content_key)
             repoll_timer = time.time() + rp_interval
-        if not display_timer or display_timer < time.time():
-            display_list = display_blob.get(content_key)
+        if not display_timer or display_timer < time.time():  # display new data after 30s
+            display_list = gi_obj.data_blob.get(content_key)
             if display_list:
                 display_choice = random.choice(display_list)
             else:
@@ -83,7 +83,7 @@ def main():
             local_hwi.display_data(display_choice)
             display_timer = time.time() + dp_interval
         last_source_state = current_source_button
-        time.sleep(0.5)
+        time.sleep(2)
 
 
 if __name__ == "__main__":
