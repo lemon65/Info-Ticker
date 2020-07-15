@@ -47,34 +47,32 @@ def index_source():
     ''' This will index the config_data -- source_index,
     so we can pull different media
     '''
-    target_source = gi.get_source_index()
-    logger.info('Index Source: %s >> %s' % (target_source, target_source + 1))
-    print('Index Source: %s >> %s' % (target_source, target_source + 1))
-    gi.set_source_index(target_source + 1)
+    target_source = gi_obj.get_source_index()
+    console.info('Index Source: %s >> %s' % (target_source, target_source + 1))
+    gi_obj.set_source_index(target_source + 1)
 
 def main():
     local_hwi = hwi.HWInterface()
     local_hwi.start_button_poller()
-    rp_interval = gi.config_data['BASIC']['repoll_interval']
-    dp_interval = gi.config_data['BASIC']['display_interval']
-    display_blob = gi.build_data_blob()
+    rp_interval = gi_obj.config_data['BASIC']['repoll_interval']
+    dp_interval = gi_obj.config_data['BASIC']['display_interval']
+    display_blob = gi_obj.build_data_blob()
+    repoll_timer = time.time() + rp_interval
     repoll_timer = None
     display_timer = None
     last_source_state = None
     logger.info('#'*30 + ' Starting the Info Ticker ' + "#"*30)
 
     while runtime_flag:
-        current_source_button = gi.get_source_index()
+        current_source_button = gi_obj.get_source_index()
         if not last_source_state:
             last_source_state = current_source_button
         if last_source_state != current_source_button:
             display_timer = None
-        content_key = gi.eval_source_state(current_source_button)
-        if not repoll_timer or repoll_timer < time.time():  # repoll_interval for getting new data from the net
+        content_key = gi_obj.eval_source_state(current_source_button)
+        if repoll_timer < time.time() or content_key == "clock":
+            display_blob = gi_obj.build_data_blob(target_key=content_key)
             repoll_timer = time.time() + rp_interval
-        if repoll_timer < time.time():
-            print("Repoll the data")
-            display_blob = gi.build_data_blob()
         if not display_timer or display_timer < time.time():
             display_list = display_blob.get(content_key)
             if display_list:
@@ -91,5 +89,5 @@ def main():
 if __name__ == "__main__":
     runtime_flag = True
     _init_loggers()
-    gi.read_config()  # Read the config data so we have an init data point.
+    gi_obj = gi.GatherInfo()
     sys.exit(main())
