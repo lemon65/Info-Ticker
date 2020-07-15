@@ -11,6 +11,7 @@ import hw_interface as hwi
 
 logger = logging.getLogger('IINFO')
 console = logging.getLogger('CONSOLE')
+gi_obj = gi.GatherInfo()
 global runtime_flag
 
 def _init_loggers():
@@ -89,5 +90,4 @@ def main():
 if __name__ == "__main__":
     runtime_flag = True
     _init_loggers()
-    gi_obj = gi.GatherInfo()
     sys.exit(main())

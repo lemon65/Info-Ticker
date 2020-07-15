@@ -9,7 +9,6 @@ import feedparser
 import datetime
 from configparser import ConfigParser
 
-
 logger = logging.getLogger('GAINFO')
 console = logging.getLogger('CONSOLE')
 
@@ -86,7 +85,6 @@ class GatherInfo():
         # If you are over the max source start loop back.
         if target_index >= int(self.config_data['BASIC']['max_source_index']):
             target_index = 0
-        logger.info('Setting source_index = %s' % target_index)
         logger.info('Setting source_index = %s' % target_index)
         self.config_data['BASIC']['source_index'] = str(target_index)
 
