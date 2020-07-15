@@ -11,7 +11,6 @@ logger = logging.getLogger('HWI')
 
 class HWInterface():
     def __init__(self):
-        intic.gi_obj
         # Variables for the LCD
         self.max_lcd_rows = int(intic.gi_obj.config_data['LCDDATA']['max_lcd_rows'])
         self.max_lcd_elements = int(intic.gi_obj.config_data['LCDDATA']['max_lcd_elements'])
