@@ -11,17 +11,17 @@ logger = logging.getLogger('HWI')
 class HWInterface():
     def __init__(self):
         # Variables for the LCD
-        self.max_lcd_rows = int(gi.config_data['LCDDATA']['max_lcd_rows'])
-        self.max_lcd_elements = int(gi.config_data['LCDDATA']['max_lcd_elements'])
-        self.display_interval = int(gi.config_data['BASIC']['display_interval'])
+        self.max_lcd_rows = int(intic.gi_obj.config_data['LCDDATA']['max_lcd_rows'])
+        self.max_lcd_elements = int(intic.gi_obj.config_data['LCDDATA']['max_lcd_elements'])
+        self.display_interval = int(intic.gi_obj.config_data['BASIC']['display_interval'])
         self.max_chars = self.max_lcd_rows * self.max_lcd_elements
-        self.lcd_address = gi.config_data['LCDDATA']['lcd_address']
-        self.lcd_expander = gi.config_data['LCDDATA']['lcd_expander']
+        self.lcd_address = intic.gi_obj.config_data['LCDDATA']['lcd_address']
+        self.lcd_expander = intic.gi_obj.config_data['LCDDATA']['lcd_expander']
         self.pi_lcd = CharLCD(i2c_expander=self.lcd_expander, address=self.lcd_address,
                               cols=self.max_lcd_elements, rows=self.max_lcd_rows, auto_linebreaks=True)
         # Variables for the Source Button
         self.poll_source_button_flag = False
-        self.source_pin = gi.config_data['BASIC']['source_pin']
+        self.source_pin = intic.gi_obj.config_data['BASIC']['source_pin']
 
 
     def write_to_lcd_screen(self, string_to_write: str, row_start: int, element_start: int, clear_lcd: bool = False):
