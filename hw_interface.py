@@ -5,23 +5,24 @@ from RPLCD.i2c import CharLCD
 from gpiozero import Button
 import gather_info as gi
 import info_ticker as intic
+from info_ticker import gi_obj
 
 logger = logging.getLogger('HWI')
 
 class HWInterface():
     def __init__(self):
         # Variables for the LCD
-        self.max_lcd_rows = int(intic.gi_obj.config_data['LCDDATA']['max_lcd_rows'])
-        self.max_lcd_elements = int(intic.gi_obj.config_data['LCDDATA']['max_lcd_elements'])
-        self.display_interval = int(intic.gi_obj.config_data['BASIC']['display_interval'])
+        self.max_lcd_rows = int(gi_obj.config_data['LCDDATA']['max_lcd_rows'])
+        self.max_lcd_elements = int(gi_obj.config_data['LCDDATA']['max_lcd_elements'])
+        self.display_interval = int(gi_obj.config_data['BASIC']['display_interval'])
         self.max_chars = self.max_lcd_rows * self.max_lcd_elements
-        self.lcd_address = intic.gi_obj.config_data['LCDDATA']['lcd_address']
-        self.lcd_expander = intic.gi_obj.config_data['LCDDATA']['lcd_expander']
+        self.lcd_address = gi_obj.config_data['LCDDATA']['lcd_address']
+        self.lcd_expander = gi_obj.config_data['LCDDATA']['lcd_expander']
         self.pi_lcd = CharLCD(i2c_expander=self.lcd_expander, address=self.lcd_address,
                               cols=self.max_lcd_elements, rows=self.max_lcd_rows, auto_linebreaks=True)
         # Variables for the Source Button
         self.poll_source_button_flag = False
-        self.source_pin = intic.gi_obj.config_data['BASIC']['source_pin']
+        self.source_pin = gi_obj.config_data['BASIC']['source_pin']
 
 
     def write_to_lcd_screen(self, string_to_write: str, row_start: int, element_start: int, clear_lcd: bool = False):
@@ -49,14 +50,14 @@ class HWInterface():
         chunk_display_secs = 7
         string_chunks = [data_string[i:i+self.max_chars] for i in range(0, len(data_string), self.max_chars)]
         end_time = int(time.time()) + self.display_interval
-        start_source_index = gi.get_source_index()
+        start_source_index = gi_obj.get_source_index()
         while(int(time.time()) < end_time):
             for step_string in string_chunks:
                 print("Data: %s" % step_string)
                 self.pi_lcd.clear()
                 counter = 0
                 while counter < chunk_display_secs * 2:
-                    if start_source_index != gi.get_source_index():
+                    if start_source_index != gi_obj.get_source_index():
                         return
                     self.write_to_lcd_screen(step_string, 0, 0)
                     time.sleep(0.5)  # sleep for 0.5sec, which we are using the chunk_display_secs * 2, to get normal seconds
